@@ -42,10 +42,25 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void OpenDoor_EventRaised_ExpectedOutput()
+        public void OpenDoor_RaiseOpenedEvent_ExpectedOutputResult()
         {
-            
             _sut.Open();
+            string outputResult = "Light is turned on";
+
+            //_fakeOutput.Received(1).OutputLine("outputResult");
+            _fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("on")));
         }
+
+        public void CloseDoor_RaiseClosedEvent_ExpectedOutputResult()
+        {
+            _sut.Open();
+            _sut.Close();
+            string outputResult = "Light is turned off";
+
+            //_fakeOutput.Received(1).OutputLine("outputResult");
+            _fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("off")));
+        }
+
+       
     }
 }
