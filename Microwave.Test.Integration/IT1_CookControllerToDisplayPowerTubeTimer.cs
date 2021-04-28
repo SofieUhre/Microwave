@@ -59,12 +59,15 @@ namespace Microwave.Test.Integration
         }
 
         [Test]
-        public void CC4_CoockontrollerTimer_StopCoocking_powerIsTurnedOff()
+        public void CC3_CoockontrollerTimer_StopCoocking_powerIsTurnedOff()
         {
             //Her skal du prøve at stoppe, og så skal du vente et sekund eller måske 2 og se at der IKKE kommer et tick (.DidNotRecieve)
-            //SUT.StartCooking(50, 2);
-            //Thread.Sleep(2500);
-            //fakeOutput.Received(1).OutputLine("PowerTube turned off");
+            SUT.StartCooking(50, 10);
+            Thread.Sleep(1500); //Venter 1½ sekund, forventer derfor at modtage ET kald til outputline
+            SUT.Stop();
+            fakeOutput.Received(1).OutputLine("PowerTube turned off");
+            Thread.Sleep(2500); //Venter til der der gået yderligere 2½ sekund
+            fakeOutput.DidNotReceive().OutputLine(Arg.Is<string>(s => s.Contains("08"))); //Der er i alt gået 4 sekunder, så der BØR være modtaget et kald med 00:08, hvis ikke stp virker
         }
 
 
