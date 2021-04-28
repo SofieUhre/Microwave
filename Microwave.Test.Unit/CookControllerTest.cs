@@ -32,7 +32,7 @@ namespace Microwave.Test.Unit
         {
             uut.StartCooking(50, 60);
 
-            timer.Received().Start(60);
+            timer.Received().Start(60*1000); //Har ændret dette til 60*1000 fordi vi i timeren regner i ms og ikke i s
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace Microwave.Test.Unit
         {
             uut.StartCooking(50, 60);
 
-            timer.TimeRemaining.Returns(115);
+            timer.TimeRemaining.Returns(115*1000);      //Har ændret dette til 115*1000 fordi vi i timeren regner i ms og ikke i s
             timer.TimerTick += Raise.EventWith(this, EventArgs.Empty);
 
             display.Received().ShowTime(1, 55);

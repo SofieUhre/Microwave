@@ -39,8 +39,9 @@ namespace Microwave.Classes.Controllers
 
         public void StartCooking(int power, int time)
         {
+            int time_ms = time * 1000;
             myPowerTube.TurnOn(power);
-            myTimer.Start(time);
+            myTimer.Start(time_ms);
             isCooking = true;
         }
 
@@ -65,8 +66,9 @@ namespace Microwave.Classes.Controllers
         {
             if (isCooking)
             {
-                int remaining = myTimer.TimeRemaining;
-                myDisplay.ShowTime(remaining / 60, remaining % 60);
+                //int remaining = myTimer.TimeRemaining;
+                int remaining_s = myTimer.TimeRemaining/1000; //Ændring! Der skulle omregnes fra milisekunder til sekunder, så derfor deles der med 1000
+                myDisplay.ShowTime(remaining_s / 60, remaining_s % 60);
             }
         }
     }
