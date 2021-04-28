@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 using Microwave.Classes.Interfaces;
 
 namespace Microwave.Classes.Boundary
@@ -24,8 +25,8 @@ namespace Microwave.Classes.Boundary
 
         public void Start(int time)
         {
-            TimeRemaining = time;
-            timer.Enabled = true;
+            TimeRemaining = time; 
+            timer.Enabled = true;   // HH: Dette får timeren til at rejse "Elapsed" eventet, eller gør det?
         }
 
         public void Stop()
@@ -39,8 +40,10 @@ namespace Microwave.Classes.Boundary
             Expired?.Invoke(this, System.EventArgs.Empty);
         }
 
+        
         private void OnTimerEvent(object sender, System.Timers.ElapsedEventArgs args)
         {
+            
             // One tick has passed
             // Do what I should
             TimeRemaining -= 1000;
@@ -50,6 +53,7 @@ namespace Microwave.Classes.Boundary
             {
                 Expire();
             }
+        
         }
 
     }
