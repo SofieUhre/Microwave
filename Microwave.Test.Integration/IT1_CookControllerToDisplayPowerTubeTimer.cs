@@ -45,25 +45,27 @@ namespace Microwave.Test.Integration
         {
             SUT.StartCooking(50, 2);
             Thread.Sleep(2200);
-            //fakeOutput.Received(2).OutputLine(Arg.Is<string>(s => s.Contains("Display shows:"))); // + Arg.Any<int>() + ":" + Arg.Any<int>()
 
             // En anden version
             fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Display shows: 00:01"))); 
             fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Display shows: 00:00"))); 
         }
 
+        //Tester at timeren ikke sender flere ticks når tiden er udløbet, altså efter 2 sekunder
         [Test]
-        public void CC2_CoockontrollerTimer_StartCoocking_poweryueIsTurnedOff()
+        public void CC2_CoockontrollerTimer_StartCoockingTimeExpire_powertueIsTurnedOff()
         {
             SUT.StartCooking(50,2);
-            Thread.Sleep(2500);
-            fakeOutput.Received(1).OutputLine("PowerTube turned off");
+            Thread.Sleep(2200);
+            fakeOutput.Received(1).OutputLine("PowerTube turned off"); //Verificere at tiden udløb
+            Thread.Sleep(1000); // Venter yderligere et sekund og tester, at veruficere at min timer rent fakktisk stopper når tiden udløber
+            fakeOutput.Received(2).OutputLine(Arg.Is<string>(s => s.Contains("Display shows: 00:0")));
         }
 
         [Test]
         public void CC3_CoockontrollerTimer_StopCoocking_powerIsTurnedOff()
         {
-            //Her skal vi prøve at stoppe, og så vi venter et sekund eller måske 2 og ser, at der IKKE kommer et tick (.DidNotReceive)
+            //Her skal vi prøve at stoppe. Derefter venter vi et sekund eller måske 2 og ser, at der IKKE kommer et tick (.DidNotReceive)
             SUT.StartCooking(50, 10);
             Thread.Sleep(1500); //Venter 1½ sekund, forventer derfor at modtage ET kald til outputline
             SUT.Stop();
@@ -71,28 +73,28 @@ namespace Microwave.Test.Integration
             Thread.Sleep(2500); //Venter til der der gået yderligere 2½ sekund
             fakeOutput.DidNotReceive().OutputLine(Arg.Is<string>(s => s.Contains("08"))); //Der er i alt gået 4 sekunder, så der BØR være modtaget et kald med 00:08, hvis ikke stp virker
         }
-        
+
 
         #endregion
 
 
-        #region Til powertube
+        #region Integrationstest mellem Cookcontroller og powertube
 
         // Denne her tester integrationen mellem coockcontroller og Powertube
-        [TestCase(1)]
+        // Ud fra Usecasen forventer jeg, at mit userinterface sender 50 - 700 W med. Jeg tester altså 50, 700 og 2 ind imellem
         [TestCase(50)]
-        [TestCase(99)]
-        public void CC4_CoockontrollerPowerTube_StartCoocking_IsPoweryubeTurnedOn(int power)
+        [TestCase(550)]
+        [TestCase(700)]
+        public void CC4_CoockontrollerPowerTube_StartCoocking_IsPowertubeTurnedOn(int power)
         {
             SUT.StartCooking(power, 2);
 
             fakeOutput.Received(1).OutputLine("PowerTube works with " + power);
         }
 
-
-        [TestCase(1)]
         [TestCase(50)]
-        [TestCase(99)]
+        [TestCase(550)]
+        [TestCase(700)]
         public void CC4_CoockontrollerPowerTube_timeExpires_IsPoweryubeTurnedOff(int power)
         {
             SUT.StartCooking(power, 2);
@@ -100,26 +102,10 @@ namespace Microwave.Test.Integration
             fakeOutput.Received(1).OutputLine("PowerTube turned off");
         }
 
-        //SEriøst.. Den her test er lidt ubrulig, fordi vi teknisk set har testet det lige ovenfor?
-        [TestCase(1)]
-        [TestCase(50)]
-        [TestCase(99)]
-        public void CC5_CoockontrollerPowerTube_StopCoocking_PoweryubeTurnedOff(int power)
-        {
-
-            //Her skal vi prøve at stoppe, og så vi venter et sekund eller måske 2 og ser, at der IKKE kommer et tick (.DidNotReceive)
-            SUT.StartCooking(power, 10);
-            Thread.Sleep(1500); //Venter 1½ sekund for at sikre, at vi er igang
-            SUT.Stop();
-            fakeOutput.Received(1).OutputLine("PowerTube turned off");
-            Thread.Sleep(2500); //Venter til der der gået yderligere 2½ sekund
-            fakeOutput.DidNotReceive().OutputLine(Arg.Is<string>(s => s.Contains("08"))); //Tester, at vi ikkeb modtager andet
-        }
-
         #endregion
 
         #region Display
-        //Igen - Den her test giver INGEN mening, fordi jeg tester det på NØJAGTIG samme måde som ovenfor i CC1
+        //Tester displayet kan tælle ned fra 3 sekunder og derudfra vise det rigtige (lidt en overflødig test, fordi det er det samme som CC1)
         [Test]
         public void CC6_CoockontrollerDisplay_StartCoocking_OutputRecievesCallFromDisplay()
         {
@@ -131,6 +117,19 @@ namespace Microwave.Test.Integration
             fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Display shows: 00:00")));
         }
 
+        //Tester displayet kan omregne forskellige antal sekunder til det rigtige output
+        [TestCase(121,02,00)]
+        [TestCase(115, 01, 54)]
+        [TestCase(60, 00, 59)]
+        [TestCase(5940, 98, 59)]
+        [TestCase(6000, 99, 59)] // Tester hvad der sker, hvis jeg sender for mange sekunder ind, altså 100 minutter frem for 99. 
+        [TestCase(6002, 00, 01)] // Tester hvad der sker, hvis jeg sender for mange sekunder ind, altså 6002 sekunder frem. 
+        public void CC7_CoockontrollerDisplay_StartCoocking_OutputRecievesCallFromDisplayWithCorrectMinutes(int time_s, int time_in_min, int time_in_sek)
+        {
+            SUT.StartCooking(50, time_s);
+            Thread.Sleep(1100); //Venter 1.2 sekund for at sikre, at vi er forbi det første tick, men ikke det næste
+            fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Display shows:") && s.Contains(time_in_min.ToString()) && s.Contains(":") && s.Contains(time_in_sek.ToString())));
+        }
 
         #endregion
 

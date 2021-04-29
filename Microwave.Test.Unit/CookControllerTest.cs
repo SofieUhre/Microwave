@@ -35,6 +35,7 @@ namespace Microwave.Test.Unit
             timer.Received().Start(60*1000); //Har ændret dette til 60*1000 fordi vi i timeren regner i ms og ikke i s
         }
 
+
         [Test]
         public void StartCooking_ValidParameters_PowerTubeStarted()
         {
