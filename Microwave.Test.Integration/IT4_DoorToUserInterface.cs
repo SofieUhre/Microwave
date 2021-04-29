@@ -26,17 +26,17 @@ namespace Microwave.Test.Integration
         [SetUp]
         public void Setup()
         {
-            // Definerer system under test
+            // System under test
             _sut = new Door();
 
-            //Definerer fakes
+            // Fakes
             _fakeTimer = Substitute.For<ITimer>();
             _fakeOutput = Substitute.For<IOutput>();
             _fakePowerButton = Substitute.For<IButton>();
             _fakeTimeButton = Substitute.For<IButton>();
             _fakeStartCancelButton = Substitute.For<IButton>();
 
-            //Definerer de rigtige klasser der skal bruges 
+            // Rigtige klasser der skal bruges 
             _powerTube = new PowerTube(_fakeOutput);
             _display = new Display(_fakeOutput);
             _light = new Light(_fakeOutput);
@@ -44,41 +44,52 @@ namespace Microwave.Test.Integration
             _userInterface = new UserInterface(_fakePowerButton, _fakeTimeButton, _fakeStartCancelButton, _sut, _display, _light, _cookController);
         }
 
+        //Døren åbnes - der testes på forventet output
         [Test]
-        public void OpenDoor_RaiseOpenedEvent_ExpectedOutputResult()
+        public void D1_OpenDoor_RaiseOpenedEvent_ExpectedOutputResult()
         {
+            //Act
             _sut.Open();
 
-            //string outputResult = "Light is turned on";
-           //_fakeOutput.Received(1).OutputLine(outputResult);
+            //Assert
+            string outputResult = "Light is turned on";
+            _fakeOutput.Received(1).OutputLine(outputResult);
 
-            _fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("on")));
+            //_fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("on")));
         }
 
+        //Døren åbnes, hvorefter den lukkes - der testes på forventet output
         [Test]
-        public void CloseDoor_RaiseClosedEvent_ExpectedOutputResult()
+        public void D2_CloseDoor_RaiseClosedEvent_ExpectedOutputResult()
         {
-            _sut.Open();
-            _sut.Close();
-            
-            //string outputResult = "Light is turned off";
-            //_fakeOutput.Received(1).OutputLine(outputResult);
-
-            _fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("off")));
-        }
-
-        [Test]
-        public void OpenAndCloseDoor_RaiseEvents_ExpectedTwoReceives()
-        {
+            //Act
             _sut.Open();
             _sut.Close();
 
-            _fakeOutput.Received(2);
+            //Assert
+            string outputResult = "Light is turned off";
+            _fakeOutput.Received(1).OutputLine(outputResult);
+
+            //_fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("off")));
         }
 
+        //Døren åbnes, hvorefter den lukkes - der testes på at der modtages to output
         [Test]
-        public void OpenDoorWhileCooking_RaiseOpenedEvents_ExpectedOutputResultFromPowerTube()
+        public void D3_OpenAndCloseDoor_RaiseEvents_ExpectedTwoReceives()
         {
+            //Act
+            _sut.Open();
+            _sut.Close();
+
+            //Assert
+            _fakeOutput.Received(2).OutputLine(Arg.Is<string>(s => s.Contains("Light")));
+        }
+
+        //Døren åbnes, hvorefter den lukkes. Døren åbnes mens den er i cooking state - der testes på forventet output fra PowerTube
+        [Test]
+        public void D4_OpenDoorWhileCooking_RaiseOpenedEvents_ExpectedOutputResultFromPowerTube()
+        {
+            //Act
             _sut.Open();
             _sut.Close();
             _fakePowerButton.Pressed += Raise.EventWith(this, EventArgs.Empty);
@@ -86,13 +97,16 @@ namespace Microwave.Test.Integration
             _fakeStartCancelButton.Pressed += Raise.EventWith(this, EventArgs.Empty);
             _sut.Open();
 
+            //Assert
             string outputResult = "PowerTube turned off";
             _fakeOutput.Received(1).OutputLine(outputResult);
         }
 
+        //Døren åbnes, hvorefter den lukkes. Døren åbnes mens den er i cooking state - der testes på forventet output fra Display
         [Test]
-        public void OpenDoorWhileCooking_RaiseOpenedEvents_ExpectedOutputResultFromDisplay()
+        public void D5_OpenDoorWhileCooking_RaiseOpenedEvents_ExpectedOutputResultFromDisplay()
         {
+            //Act
             _sut.Open();
             _sut.Close();
             _fakePowerButton.Pressed += Raise.EventWith(this, EventArgs.Empty);
@@ -100,26 +114,10 @@ namespace Microwave.Test.Integration
             _fakeStartCancelButton.Pressed += Raise.EventWith(this, EventArgs.Empty);
             _sut.Open();
 
+            //Assert
             string outputResult = "Display cleared";
             _fakeOutput.Received(1).OutputLine(outputResult);
         }
-
-        //Denne test virker ikke som forventet
-        [Test]
-        public void OpenDoorWhileCooking_RaiseOpenedEvents_ExpectedCountOfReceives()
-        {
-            _sut.Open();
-            _sut.Close();
-            _fakePowerButton.Pressed += Raise.EventWith(this, EventArgs.Empty);
-            _fakeTimeButton.Pressed += Raise.EventWith(this, EventArgs.Empty);
-            _fakeStartCancelButton.Pressed += Raise.EventWith(this, EventArgs.Empty);
-            _sut.Open();
-
-            int countOfReceives = 8;
-
-            _fakeOutput.Received(countOfReceives);
-        }
-
 
     }
 }
