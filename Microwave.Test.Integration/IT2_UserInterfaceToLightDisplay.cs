@@ -39,7 +39,7 @@ namespace Microwave.Test.Integration
             userInterface = new UserInterface(buttoPower, buttoTime, buttoStartCancel, door, display, light, cookController);
 
         }
-        #region Lights
+      
 
         [Test]
         public void Door_DoorOpen_Output()
