@@ -39,8 +39,7 @@ namespace Microwave.Test.Integration
             userInterface = new UserInterface(buttoPower, buttoTime, buttoStartCancel, door, display, light, cookController);
 
         }
-        #region Lights
-
+       
         [Test]
         public void Door_DoorOpen_Output()
         {
@@ -179,7 +178,7 @@ namespace Microwave.Test.Integration
 
 
             fakeOutput.Received(2).OutputLine(Arg.Is<string>(s => s.Contains(" 50 W")));
-            // "Power is On"
+            
 
         }
         [Test]
@@ -300,7 +299,7 @@ namespace Microwave.Test.Integration
             door.Closed += Raise.EventWith(this, EventArgs.Empty);
             buttoStartCancel.Pressed += Raise.EventWith(this, EventArgs.Empty);
             fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Light is turned on")));
-            // "Light is turned of"
+           
         }
 
 
@@ -321,6 +320,6 @@ namespace Microwave.Test.Integration
         }
 
 
-        #endregion
+       
     }
 }
