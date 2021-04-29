@@ -248,36 +248,6 @@ namespace Microwave.Test.Integration
 
 
         [Test]
-        public void Extension2_OpenDoor_Output150W()
-        {
-            door.Opened += Raise.EventWith(this, EventArgs.Empty);
-            door.Closed += Raise.EventWith(this, EventArgs.Empty);
-            buttoPower.Pressed += Raise.EventWith(this, EventArgs.Empty);
-            Thread.Sleep(100);
-            buttoPower.Pressed += Raise.EventWith(this, EventArgs.Empty);
-            Thread.Sleep(100);
-            buttoPower.Pressed += Raise.EventWith(this, EventArgs.Empty);
-
-            //Lys tænder
-            door.Opened += Raise.EventWith(this, EventArgs.Empty);
-            fakeOutput.Received(2).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("on")));
-
-            //Display blank
-            fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Display cleared")));
-
-            door.Closed += Raise.EventWith(this, EventArgs.Empty);
-            //Lys Sluker
-
-            fakeOutput.Received(2).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("off")));
-
-            buttoPower.Pressed += Raise.EventWith(this, EventArgs.Empty);
-            //Reset Value to 50 W
-            fakeOutput.Received(2).OutputLine(Arg.Is<string>(s => s.Contains(" 50 W")));
-
-
-        }
-
-        [Test]
         public void Button_TimeOn_OutputOneMin()
         {
             door.Opened += Raise.EventWith(this, EventArgs.Empty);
