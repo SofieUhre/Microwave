@@ -54,8 +54,6 @@ namespace Microwave.Test.Integration
             //Assert
             string outputResult = "Light is turned on";
             _fakeOutput.Received(1).OutputLine(outputResult);
-
-            //_fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("on")));
         }
 
         //Døren åbnes, hvorefter den lukkes - der testes på forventet output
@@ -69,8 +67,6 @@ namespace Microwave.Test.Integration
             //Assert
             string outputResult = "Light is turned off";
             _fakeOutput.Received(1).OutputLine(outputResult);
-
-            //_fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Light") && s.Contains("off")));
         }
 
         //Døren åbnes, hvorefter den lukkes - der testes på at der modtages to output
@@ -84,6 +80,8 @@ namespace Microwave.Test.Integration
             //Assert
             _fakeOutput.Received(2).OutputLine(Arg.Is<string>(s => s.Contains("Light")));
         }
+
+        //De næste to tests behøver man i princippet ikke at lave, fordi dørens funktioner er testet
 
         //Døren åbnes, hvorefter den lukkes. Døren åbnes mens den er i cooking state - der testes på forventet output fra PowerTube
         [Test]
