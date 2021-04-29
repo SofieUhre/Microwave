@@ -92,7 +92,7 @@ namespace Microwave.Test.Integration
             buttoStartCancel.Pressed += Raise.EventWith(this, EventArgs.Empty);
 
             powerTube.Received(1).TurnOn(50);
-            fakeOutput.Received(1).OutputLine(Arg.Is(s => ))
+           
 
         }
 
