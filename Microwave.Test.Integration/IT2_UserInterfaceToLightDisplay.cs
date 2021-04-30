@@ -256,8 +256,8 @@ namespace Microwave.Test.Integration
             buttoPower.Pressed += Raise.EventWith(this, EventArgs.Empty);
             buttoTime.Pressed += Raise.EventWith(this, EventArgs.Empty);
 
-            fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Display shows: 01:00")));
 
+            fakeOutput.Received(1).OutputLine(Arg.Is<string>(s => s.Contains("Display shows: 01:00")));
 
         }
         [Test]
