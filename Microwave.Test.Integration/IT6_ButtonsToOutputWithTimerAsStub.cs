@@ -10,6 +10,7 @@ using NSubstitute;
 
 namespace Microwave.Test.Integration
 {
+
     class IT6_ButtonsToOutputWithTimerAsStub
     {
 
