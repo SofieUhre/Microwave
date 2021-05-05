@@ -49,150 +49,83 @@ namespace Microwave.Test.Integration
             Console.SetOut(readConsole);
         }
 
+        /// <summary>
+        /// Tester at light har forbindelse til Output
+        /// </summary>
         [Test]
-        public void Test6_1_1_PressPowerBut_AssertOnConsoleShowPower()
+        public void Test1_FromLight_ZeroLogLine_ToOutput()
         {
-            //Act (Is ind State =Ready)
+            //Assert
+            var text = readConsole.ToString();
+            Assert.IsFalse(text.Contains("Light is turned on"));
+        }
+       [Test]
+        public void Test1_FromLight_LogLine_ToOutput()
+        {
+            //Act - Is in State = Ready => State = DoorOpen
+            door.Open();
+
+            //Assert
+            var text = readConsole.ToString();
+            Assert.IsTrue(text.Contains("Light is turned on"));
+        }
+
+        /// <summary>
+        /// Tester at Display har forbindelse til Output
+        /// </summary>
+        [Test]
+        public void Test2_FremDisplay_ZeroLogLine_ToConsole()
+        {
+            //Act (Is ind State = Ready => State = SetPower) 
+           // powerButton.Press();
+
+            //Assert
+            var text = readConsole.ToString();
+            Assert.IsFalse(text.Contains("Display shows: 50 W"));
+        }
+        
+        [Test]
+        public void Test2_FromDisplay_LogLine_ToConsole()
+        {
+            //Act (Is ind State = Ready => State = SetPower) 
             powerButton.Press();
+
             //Assert
             var text = readConsole.ToString();
             Assert.IsTrue(text.Contains("Display shows: 50 W"));
-
         }
-
+        /// <summary>
+        /// Tester at PowerTube har forbindelse til Output
+        /// </summary>
         [Test]
-        public void Test6_1_2_PressPowerBut_AssertOnConsoleShowPower()
+        public void Test3_FromPowerTube_ZeroLogLine_ToConsole()
         {
-            //Act (Is ind State =Ready)
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
             //Assert
             var text = readConsole.ToString();
-            Assert.IsTrue(text.Contains("Display shows: 150 W"));
 
+            Assert.IsFalse(text.Contains("PowerTube works with 50"));
         }
+        /// <summary>
+        /// Tester at PowerTube har forbindelse til Output
+        /// </summary>
         [Test]
-        public void Test6_2_PressTimeBut_AssertOnConsoleShowTime()
-        {
-            //Arrange - Need to be in state = SetPower
-            powerButton.Press();
-
-            //Act - Is in State = Set Power
-            timeButton.Press();
-
-            //Assert
-            var text = readConsole.ToString();
-            Assert.IsTrue(text.Contains("Display shows: 01:00"));
-
-        }
-
-        [Test]
-        public void Test6_3_1_PressStartCancelBut_AssertOnConsoleTurnOnAnd50W()
+        public void Test3_FromPowerTube_LogLine_ToConsole()
         {
             //Arrange - Need to be in state = SetTime
             powerButton.Press();
             timeButton.Press();
 
-            //Act - Is in State = SetTime
-            startCancelButton.Press();
-            
-            System.Threading.Thread.Sleep(62000); //Man skal vente i mere end 60 sekunder, før oven slukker
-            //Assert
-            var text = readConsole.ToString();
-            Assert.Multiple(() =>
-            {
-                Assert.IsTrue(text.Contains("Light is turned on"));
-                Assert.IsTrue(text.Contains("Display shows: 50 W"));
-                Assert.IsTrue(text.Contains("Display cleared"));
-            });
-
-        }
-        [Test]
-        public void Test6_3_2_PressStartCancelBut_AssertOnConsoleTurnOnAnd350W()
-        {
-            door.Open();
-            door.Close();
-            //Arrange - Need to be in state = SetTime
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            timeButton.Press();
-
-            //Act - Is in State = SetTime
-            startCancelButton.Press(); //Skulle gerne starte ovnen
-            System.Threading.Thread.Sleep(62000); //Man skal vente i mere end 60 sekunder, før oven slukker
-
-            //Assert
-            var text = readConsole.ToString();
-            Assert.Multiple(() =>
-            {
-                Assert.IsTrue(text.Contains("Light is turned on"));
-                Assert.IsTrue(text.Contains("Display shows: 350 W"));
-                Assert.IsTrue(text.Contains("Display cleared"));
-            });
-
-        }
-        [Test]
-        public void Test6_3_3_PressStartCancelBut_AssertOnConsoleTurnOnAnd750W()
-        {
-            //Arrange - Need to be in state = SetTime
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            powerButton.Press();
-            timeButton.Press();
-
-            //Act - Is in State = SetTime
-            startCancelButton.Press();
-            
-            System.Threading.Thread.Sleep(62000); //Man skal vente i mere end 60 sekunder, før oven slukker
-            //Assert
-            var text = readConsole.ToString();
-            Assert.Multiple(() =>
-            {
-                Assert.IsTrue(text.Contains("Light is turned on"));
-                Assert.IsFalse(text.Contains("Display shows: 750 W"));
-                Assert.IsTrue(text.Contains("Display cleared"));
-            });
-        }
-
-        [Test]
-        public void Test6_4_PressStartCancelBut_AssertOnConsoleTurnOff()
-        {
-            //Arrange - Need to be in state = Cooking
-            powerButton.Press();
-            timeButton.Press();
-            startCancelButton.Press();
-            
-            System.Threading.Thread.Sleep(5000); //vi venter lige i 5 sekunder, for at gøre det virkelighedsnært
-            //Act - Is in State = Cooking
+            //Act - Is in State = SetTime => State = Cooking
             startCancelButton.Press();
 
             //Assert
             var text = readConsole.ToString();
-            Assert.Multiple(() =>
-            {
-                Assert.IsTrue(text.Contains("PowerTube turned off"));
-                Assert.IsTrue(text.Contains("Display cleared"));
-                Assert.IsTrue(text.Contains("Light is turned off"));
-            });
+
+            Assert.IsTrue(text.Contains("PowerTube works with 50"));
+
+
         }
+
     }
 }
 
