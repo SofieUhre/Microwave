@@ -96,19 +96,23 @@ namespace Microwave.Test.Integration
 
             //Act - Is in State = SetTime
             startCancelButton.Press();
-
+            
+            System.Threading.Thread.Sleep(62000); //Man skal vente i mere end 60 sekunder, før oven slukker
             //Assert
             var text = readConsole.ToString();
             Assert.Multiple(() =>
             {
                 Assert.IsTrue(text.Contains("Light is turned on"));
                 Assert.IsTrue(text.Contains("Display shows: 50 W"));
+                Assert.IsTrue(text.Contains("Display cleared"));
             });
 
         }
         [Test]
         public void Test6_3_2_PressStartCancelBut_AssertOnConsoleTurnOnAnd350W()
         {
+            door.Open();
+            door.Close();
             //Arrange - Need to be in state = SetTime
             powerButton.Press();
             powerButton.Press();
@@ -120,7 +124,8 @@ namespace Microwave.Test.Integration
             timeButton.Press();
 
             //Act - Is in State = SetTime
-            startCancelButton.Press();
+            startCancelButton.Press(); //Skulle gerne starte ovnen
+            System.Threading.Thread.Sleep(62000); //Man skal vente i mere end 60 sekunder, før oven slukker
 
             //Assert
             var text = readConsole.ToString();
@@ -128,6 +133,7 @@ namespace Microwave.Test.Integration
             {
                 Assert.IsTrue(text.Contains("Light is turned on"));
                 Assert.IsTrue(text.Contains("Display shows: 350 W"));
+                Assert.IsTrue(text.Contains("Display cleared"));
             });
 
         }
@@ -154,13 +160,15 @@ namespace Microwave.Test.Integration
 
             //Act - Is in State = SetTime
             startCancelButton.Press();
-
+            
+            System.Threading.Thread.Sleep(62000); //Man skal vente i mere end 60 sekunder, før oven slukker
             //Assert
             var text = readConsole.ToString();
             Assert.Multiple(() =>
             {
                 Assert.IsTrue(text.Contains("Light is turned on"));
                 Assert.IsFalse(text.Contains("Display shows: 750 W"));
+                Assert.IsTrue(text.Contains("Display cleared"));
             });
         }
 
@@ -171,7 +179,8 @@ namespace Microwave.Test.Integration
             powerButton.Press();
             timeButton.Press();
             startCancelButton.Press();
-
+            
+            System.Threading.Thread.Sleep(5000); //vi venter lige i 5 sekunder, for at gøre det virkelighedsnært
             //Act - Is in State = Cooking
             startCancelButton.Press();
 
