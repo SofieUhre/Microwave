@@ -142,7 +142,8 @@ namespace Microwave.Test.Integration
 
             //Assert
             fakeOutput.Received(1).OutputLine(Arg.Is<string>("Light is turned on"));
-            fakeOutput.Received(1).OutputLine(Arg.Is<string>("Display shows: 750 W"));
+            fakeOutput.Received(0).OutputLine(Arg.Is<string>("Display shows: 750 W"));
+            fakeOutput.Received(2).OutputLine(Arg.Is<string>("Display shows: 50 W"));
 
         }
 
