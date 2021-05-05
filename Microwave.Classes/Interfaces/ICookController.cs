@@ -10,7 +10,6 @@ namespace Microwave.Classes.Interfaces
     {
         void StartCooking(int power, int time);
         void Stop();
-        IUserInterface UI { set;}
-
+        public IUserInterface UI {set;}
     }
 }
