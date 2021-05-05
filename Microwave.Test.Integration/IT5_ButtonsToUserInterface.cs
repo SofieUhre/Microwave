@@ -72,7 +72,7 @@ namespace Microwave.Test.Integration
             //Arrange - Need to be in state = SetPower
             powerButton.Press();
 
-            //Act - Is in State = Set Power
+            //Act - Is in State = Set Power  => State = SetTime
             timeButton.Press();
 
             //Assert
@@ -87,7 +87,7 @@ namespace Microwave.Test.Integration
             powerButton.Press();
             timeButton.Press();
 
-            //Act - Is in State = SetTime
+            //Act - Is in State = SetTime  => State = Cooking
             startCancelButton.Press();
 
             //Assert
@@ -108,7 +108,7 @@ namespace Microwave.Test.Integration
             powerButton.Press();
             timeButton.Press();
 
-            //Act - Is in State = SetTime
+            //Act - Is in State = SetTime  => State = Cooking
             startCancelButton.Press();
 
             //Assert
@@ -137,7 +137,7 @@ namespace Microwave.Test.Integration
             powerButton.Press();
             timeButton.Press();
 
-            //Act - Is in State = SetTime
+            //Act - Is in State = SetTime => State = Cooking
             startCancelButton.Press();
 
             //Assert
@@ -155,7 +155,7 @@ namespace Microwave.Test.Integration
             timeButton.Press();
             startCancelButton.Press();
 
-            //Act - Is in State = Cooking
+            //Act - Is in State = Cooking  => State = Ready
             startCancelButton.Press();
 
             //Assert
