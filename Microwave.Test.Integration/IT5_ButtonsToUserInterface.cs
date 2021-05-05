@@ -39,6 +39,7 @@ namespace Microwave.Test.Integration
 
             timer = Substitute.For<ITimer>();
             powerTube = new PowerTube(fakeOutput);
+            cooker = new CookController(timer, display, powerTube);
 
             cooker = new CookController(timer, display, powerTube);
             ui = new UserInterface(powerButton, timeButton, startCancelButton, door, display, light, cooker);
