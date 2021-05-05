@@ -46,7 +46,7 @@ namespace Microwave.Test.Integration
 
         //Døren åbnes - der testes på forventet output
         [Test]
-        public void D1_DoorInteface_OpenDoor_DoorIsOpen()
+        public void D1_DoorUserInteface_OpenDoor_DoorIsOpen()
         {
             //Act
             _sut.Open();
@@ -58,7 +58,7 @@ namespace Microwave.Test.Integration
 
         //Døren åbnes, hvorefter den lukkes - der testes på forventet output
         [Test]
-        public void D2_DoorInterface_CloseDoor_DoorIsClosed()
+        public void D2_DoorUserInterface_CloseDoor_DoorIsClosed()
         {
             //Act
             _sut.Open();
@@ -71,7 +71,7 @@ namespace Microwave.Test.Integration
 
         //Døren åbnes, hvorefter den lukkes - der testes på at der modtages to output
         [Test]
-        public void D3_DoorInterface_OpenAndCloseDoor_ReceivedTwoOutputs()
+        public void D3_DoorUserInterface_OpenAndCloseDoor_ReceivedTwoOutputs()
         {
             //Act
             _sut.Open();
@@ -85,7 +85,7 @@ namespace Microwave.Test.Integration
 
         //Døren åbnes, hvorefter den lukkes. Døren åbnes mens den er i cooking state - der testes på forventet output fra PowerTube
         [Test]
-        public void D4_DoorInterface_OpenDoorWhileCooking_PowerTubeIsTurnedOff()
+        public void D4_DoorUserInterface_OpenDoorWhileCooking_PowerTubeIsTurnedOff()
         {
             //Act
             _sut.Open();
@@ -102,7 +102,7 @@ namespace Microwave.Test.Integration
 
         //Døren åbnes, hvorefter den lukkes. Døren åbnes mens den er i cooking state - der testes på forventet output fra Display
         [Test]
-        public void D5_DoorInterface_OpenDoorWhileCooking_DisplayIsCleared()
+        public void D5_DoorUserInterface_OpenDoorWhileCooking_DisplayIsCleared()
         {
             //Act
             _sut.Open();
