@@ -22,6 +22,7 @@ namespace Microwave.Test.Integration
         private ILight _light;
         private ICookController _cookController;
         private IUserInterface _userInterface;
+
        
         [SetUp]
         public void Setup()
